@@ -14,7 +14,6 @@ class Blockchain(object):
         self.current_transactions = []
         # Assign nodes to an empty set()
         self.nodes = set()
-
         # Create the genesis block and pass in previous_hash + proof
         self.new_block(previous_hash=1, proof=100)
 
@@ -100,22 +99,6 @@ def last_block():
         "last_block": blockchain.last_block
     }
     return jsonify(response), 200
-
-@app.route('/transactions/new', methods=['POST'])
-def new_transaction():
-    values = request.get_json()
-    # Specify required fields in Post, assign to required
-    required = ['sender', 'recipient', 'amount']
-    # If any of those values are missing...
-    if not all(v in values for v in required):
-        # Return an error message and 400 status
-        return 'Missing values', 400
-    # Create a new transaction and assign to index
-    index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
-    # Assign a confirmation message containing index to response
-    response = {'message': f'Transaction will be added to Block {index}'}
-    # Return jsonify-ed response and 201 status
-    return jsonify(response), 201
 
 @app.route('/mine', methods=['POST'])
 def mine():
